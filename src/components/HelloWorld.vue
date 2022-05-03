@@ -2,12 +2,16 @@
   <div>
     <h1 class="title">Suvdaa translate</h1>
     <div class="section">
-
     <el-input placeholder="Орчуулга" @input="test" v-model="client"></el-input>
     <div class="translate">
       <span v-if="client !== ''">{{ translate }}</span>
       <p v-if="isOpenDesc">tailbar: {{ desc }}</p>
     </div>
+    </div>
+    <div class="suggest">
+      <div v-for="(item, index) in texts.data" :key="index">
+        <div><i class="el-icon-search"></i> {{item.attributes.client}} - {{ item.attributes.translate }}</div>
+      </div>
     </div>
   </div>
 </template>
@@ -23,12 +27,14 @@ export default {
       client: '',
       translate: '',
       desc: '',
-      isOpenDesc: false
+      isOpenDesc: false,
+      texts: null
     }
   },
   methods: {
     test() {
       axios.get('http://localhost:1337/api/texts').then(el => {
+        this.texts = el.data
         el.data.data.forEach(text => {
           if (text.attributes.client.toLowerCase() === this.client.toLowerCase()) {
             this.isOpenDesc = true
@@ -63,12 +69,22 @@ body {
 .section {
   position: absolute;  
   top: 50%;
-  left: 50%;
+  left: 25%;
   transform: translate(-50%, -50%);
   width: 300px;
   height: 200px;
   background: coral;
   padding: 75px;
+}
+.suggest {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 200px;
+  background: coral;
+  padding: 75px
 }
 .translate {
   margin-top: 60px;
